@@ -17,8 +17,9 @@ namespace Todo.API
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<TodoDbContext>();
+                var userManager = services.GetRequiredService<UserManager<User>>();
                 var roleManager = services.GetRequiredService<RoleManager<Role>>();
-                var seeder = new Seeder(context, roleManager);
+                var seeder = new Seeder(context, userManager, roleManager);
 
                 seeder.Seed();
             }
