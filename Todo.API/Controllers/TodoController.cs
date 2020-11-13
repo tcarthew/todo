@@ -83,7 +83,7 @@ namespace Todo.API.Controllers
     [Authorize()]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TodoUpdateResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Update([FromRoute]int id, [FromBody] TodoRequest request)
     {
       var user = await GetUser();
@@ -103,15 +103,16 @@ namespace Todo.API.Controllers
       todo.Description = request.Description;
       todo.IsComplete = request.IsComplete;
       todo.LastUpdate = DateTime.UtcNow;
-      _todoService.Update(todo);
 
-      return Ok();
+      var result = await _todoService.Update(todo);
+
+      return Ok(new TodoUpdateResponse(result));
     }
 
     [Authorize()]
     [HttpPut("{id}/{field}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TodoUpdateResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> ToggleIsComplete([FromRoute]int id, [FromRoute]string field, [FromBody]TodoUpdatePartialRequest request)
     {
       var user = await GetUser();
@@ -128,9 +129,10 @@ namespace Todo.API.Controllers
       }
 
       todo.UpdateField(field, request.Value);
-      _todoService.Update(todo);
+      
+      var result = await _todoService.Update(todo);
 
-      return Ok();
+      return Ok(new TodoUpdateResponse(result));
     }
 
     [Authorize()]
