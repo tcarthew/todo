@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -15,9 +16,9 @@ namespace Todo.API.UnitTests
 {
   public class TodoTestBase: IDisposable
   {
-    private readonly string connectionString = "DataSource=memory:";
-    private readonly SqliteConnection _connection;
-    protected readonly TodoDbContext _context;
+    private readonly string connectionString = "Filename=:memory:";
+    private SqliteConnection _connection;
+    
     private IList<User> _mockUsers = new List<User>()
     {
       new User() { Id = 1, Email = "test1@test.com" },
@@ -26,9 +27,15 @@ namespace Todo.API.UnitTests
 
     public TodoTestBase()
     {
+      
+    }
+
+    protected TodoDbContext CreateContext() 
+    {
       _connection = new SqliteConnection(connectionString);
       _connection.Open();
-      _context = new TodoDbContext(GetOptions(_connection));
+
+      return new TodoDbContext(GetOptions(_connection));
     }
 
     public void Dispose()

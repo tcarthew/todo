@@ -52,10 +52,11 @@ namespace Todo.API.Services
       return await _context.TodoItems.FindAsync(id);
     }
 
-    public async void Update(TodoItem item)
+    public async Task<int> Update(TodoItem item)
     {
       _context.TodoItems.Update(item);
-      await _context.SaveChangesAsync();
+      
+      return await _context.SaveChangesAsync();
     }
   }
 }

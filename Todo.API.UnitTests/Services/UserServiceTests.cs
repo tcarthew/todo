@@ -16,7 +16,7 @@ namespace Todo.API.UnitTests.Services
     public UserServiceTests()
     {
       _mockUserManager = GetMockUserManager();
-      _userService = new UserService(_mockUserManager.Object, _context, GetMockOptionsSettings().Object);
+      _userService = new UserService(_mockUserManager.Object, CreateContext(), GetMockOptionsSettings().Object);
     }
 
     [Fact]
