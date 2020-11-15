@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { compose } from 'redux';
+import { connect, useStore } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import * as actions from '../store/actions';
 
@@ -13,12 +13,23 @@ class Login extends Component {
     });
   }
 
-  render() {
-    const { handleSubmit } = this.props;
+  componentDidMount() {
+    this.props.change('username', this.props.username);
+  }
 
+  render() {
+    const { handleSubmit, errorMessage, username } = this.props;
+    const error = errorMessage ? <div className="alert alert-danger">{ errorMessage }</div> : null;
+    const registered = username ? 
+      <div className="alert alert-success">
+        User <strong>{ username }</strong> successfully registered. Proceed to login.
+      </div> : null;
+    
     return (
-      <form className="form-signin" onSubmit={ handleSubmit(this.onSubmit) }>
+      <form className="form-todo" onSubmit={ handleSubmit(this.onSubmit) }>
         <h1 className="h3 mb-3 font-weight-normal">Login</h1>
+        { registered }
+        { error }
         <label className="sr-only">Username</label>
         <Field
           name="username"
@@ -45,7 +56,10 @@ class Login extends Component {
 }
 
 function mapStateToProps(state) {
-  return { errorMessage: state.auth.errorMessage };
+  return { 
+    errorMessage: state.auth.errorMessage,
+    username: state.auth.username
+  };
 }
 
 export default compose(

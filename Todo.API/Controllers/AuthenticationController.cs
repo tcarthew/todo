@@ -43,7 +43,7 @@ namespace Todo.API.Controllers
           return CreatedAtRoute("User_GetById", new { id = result.Id }, null); 
         }
         
-        return UnprocessableEntity("Email address is in user");
+        return UnprocessableEntity("Email address is in use");
       }
       catch (Exception ex)
       {

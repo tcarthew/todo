@@ -1,8 +1,9 @@
-import { AUTH_USER, AUTH_ERROR } from '../actions/types';
+import { AUTH_USER, AUTH_ERROR, REGISTER_USER } from '../actions/types';
 
 const INITIAL_STATE = {
   token: '',
-  errorMessage: ''
+  errorMessage: '',
+  username: '',
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -11,7 +12,9 @@ export default function(state = INITIAL_STATE, action) {
 
     return {
       ...state,
-      token: action.payload
+      token: action.payload,
+      username: '',
+      errorMessage: ''
     }
   }
 
@@ -20,6 +23,14 @@ export default function(state = INITIAL_STATE, action) {
       ...state,
       errorMessage: action.payload
     }
+  }
+
+  if (action.type === REGISTER_USER) {
+    return {
+      ...state,
+      username: action.payload,
+      errorMessage: ''
+    };
   }
 
   return state;
