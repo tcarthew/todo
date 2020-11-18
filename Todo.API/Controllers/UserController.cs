@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Todo.API.Data.Entities;
+using Todo.API.Models.Auth;
 using Todo.API.Services;
 
 namespace Todo.API.Controllers
@@ -20,7 +19,7 @@ namespace Todo.API.Controllers
     {
     }
 
-    [Authorize()]
+    [Authorize(Roles = "Admin")]
     [HttpGet("{id}", Name = "User_GetById")]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -32,14 +31,6 @@ namespace Todo.API.Controllers
         return Unauthorized();
       }
 
-      var tokenIdClaim = Token.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
-      var roleClaim = Token.Claims.FirstOrDefault(c => c.Type == "role");
-      var role = roleClaim.Value; 
-
-      if ((tokenIdClaim == null) || ((role != Role.RoletypeAdmin) && (Convert.ToInt64(tokenIdClaim.Value) != id))) {
-        return Unauthorized();
-      }
-
       var user = await _userService.GetUserById(id);
 
       if (user == null)
@@ -47,15 +38,18 @@ namespace Todo.API.Controllers
         return BadRequest();
       }
 
-      return Ok(user);
+      return Ok(new UserDto(user.Id, user.Email, user.UserName));
     }
 
     [Authorize(Roles = "Admin")]
     [HttpGet]
-    [ProducesResponseType(typeof(IList<User>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<UserDto>), StatusCodes.Status200OK)]
     public IActionResult GetUsers()
     {
-      var users = _userService.GetUsers().ToList();
+      var users = _userService
+        .GetUsers()
+        .Select(u => new UserDto(u.Id, u.Email, u.UserName))
+        .ToList();
 
       return Ok(users);
     }

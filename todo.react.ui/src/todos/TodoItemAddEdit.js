@@ -34,8 +34,7 @@ class TodoItemAddEdit extends Component {
     }
 
     if (mode === 'add') {
-      this.props.createTodo(formProps, this.props.token, (data) => {
-        console.log('Created: ', data);
+      this.props.createTodo(formProps, this.props.token, () => {
         this.props.history.push('/Items');
       });
     }

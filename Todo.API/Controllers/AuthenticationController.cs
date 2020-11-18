@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,12 +13,11 @@ namespace Todo.API.Controllers
 {
   [ApiController]
   [Route("api/auth")]
-  public class AuthenticationController : ControllerBase
+  public class AuthenticationController : BaseController
   {
-    private IUserService _userService;
     public AuthenticationController(IUserService userService)
+      : base(userService)
     {
-      this._userService = userService;
     }
 
     [HttpPost]
@@ -27,7 +27,7 @@ namespace Todo.API.Controllers
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Produces("application/json")]
-    public async Task<IActionResult> Register([FromBody] UserRequest request)
+    public async Task<IActionResult> Register([FromBody] UserDto request)
     {
       if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
       {
@@ -53,9 +53,9 @@ namespace Todo.API.Controllers
 
     [HttpPost]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(AuthenticateResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AuthenticateDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Authenticate([FromBody]UserRequest request)
+    public async Task<IActionResult> Authenticate([FromBody]UserDto request)
     {
       var user = await _userService.GetUserByEmailAsync(request.Email);
       
@@ -66,12 +66,42 @@ namespace Todo.API.Controllers
       if (await _userService.CheckPasswordAsync(user, request.Password))
       {
         var token = await _userService.CreateAuthorizationToken(user);
-        var response = new AuthenticateResponse(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
+        var response = new AuthenticateDto(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
 
         return Ok(response);
       }
 
       return BadRequest();
+    }
+
+    [HttpGet]
+    [Authorize]
+    [Route("me")]
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Me()
+    {
+      if (Token == null)
+      {
+        return Unauthorized();
+      }
+
+      var tokenIdClaim = Token.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
+
+      if (tokenIdClaim == null)
+      {
+        return Unauthorized();
+      }
+
+      var user = await _userService.GetUserById(Convert.ToInt64(tokenIdClaim.Value));
+
+      if (user == null)
+      {
+        return BadRequest();
+      }
+
+      return Ok(new UserDto(user.Id, user.Email, user.UserName));
     }
   }
 }

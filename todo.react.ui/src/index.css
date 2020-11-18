@@ -58,3 +58,7 @@ body {
 ::placeholder { /* Recent browsers */
   text-transform: uppercase;
 }
+
+.card-header h5 {
+  cursor: pointer;
+}

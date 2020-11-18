@@ -3,6 +3,7 @@ import {
   AUTH_USER,
   AUTH_ERROR,
   REGISTER_USER,
+  TODO_ADD,
   TODO_LIST,
   TODO_ERROR,
   TODO_GET,
@@ -90,8 +91,8 @@ export const createTodo = (formProps, token, onComplete) => async (dispatch) => 
   try {
     const response = await axios.post(`${TODOS_URL}`, { ...formProps }, getConfig(token));
 
-    dispatch({ type: TODO_UPDATE, payload: null });
-    onComplete(response.data);
+    dispatch({ type: TODO_ADD, payload: response.data });
+    onComplete();
   } catch (err) {
     console.log('error: ', err);
     dispatch({ type: TODO_ERROR, payload: err?.response?.data });
@@ -100,10 +101,9 @@ export const createTodo = (formProps, token, onComplete) => async (dispatch) => 
 
 export const updateTodo = (formProps, token, onComplete) => async (dispatch) => {
   try {
-    const response = await axios.put(`${TODOS_URL}/${formProps.id}`, { ...formProps }, getConfig(token));
-
+    await axios.put(`${TODOS_URL}/${formProps.id}`, { ...formProps }, getConfig(token));
     dispatch({ type: TODO_UPDATE, payload: null });
-    onComplete(response.data.updated);
+    onComplete();
   } catch(err) {
     dispatch({ type: TODO_ERROR, payload: err?.response?.data });
   }

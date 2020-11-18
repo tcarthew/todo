@@ -2,16 +2,17 @@ using System;
 
 namespace Todo.API.Models.Auth
 {
-  public class AuthenticateResponse
+  public class AuthenticateDto
   {
     public string Token { get; set; }
     public DateTime Expires { get; set; }
 
-    public AuthenticateResponse()
+    public AuthenticateDto()
     {
     }
 
-    public AuthenticateResponse(string token, DateTime expires)
+    public AuthenticateDto(string token, DateTime expires)
+      : this()
     {
       this.Token = token;
       this.Expires = expires;

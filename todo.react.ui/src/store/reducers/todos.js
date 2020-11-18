@@ -9,7 +9,10 @@ const INITIAL_STATE = {
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
     case TODO_ADD:
-      break;
+      return {
+        ...state,
+        items: [...state.items, action.payload]
+      }
 
     case TODO_GET:
       return {
@@ -30,7 +33,6 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         items: state.items.filter(i => i.id !== action.payload.id)
       }
-      break;
 
     case TODO_LIST:
       return {

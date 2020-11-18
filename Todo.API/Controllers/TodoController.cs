@@ -27,7 +27,7 @@ namespace Todo.API.Controllers
     [HttpPost()]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> Create([FromBody] TodoRequest request)
+    public async Task<IActionResult> Create([FromBody] TodoDto request)
     {
       var user = await GetUser();
 
@@ -44,7 +44,7 @@ namespace Todo.API.Controllers
     [Authorize()]
     [HttpGet("{id}", Name = "Todos_GetById")]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(TodoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TodoDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
       var user = await GetUser();
@@ -55,14 +55,14 @@ namespace Todo.API.Controllers
         return Forbid();
       }
 
-      var response = new TodoResponse() 
+      var response = new TodoDto() 
       {
         Id = todo.Id,
         Title = todo.Title,
         Description = todo.Description,
         IsComplete = todo.IsComplete,
         LastUpdate = todo.LastUpdate,
-        User = new UserResponse(todo.User.Id, todo.User.UserName, todo.User.Email)
+        User = new UserDto(todo.User.Id, todo.User.UserName, todo.User.Email)
       };
 
       return Ok(response);
@@ -71,7 +71,7 @@ namespace Todo.API.Controllers
     [Authorize()]
     [HttpGet()]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(IList<TodoResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<TodoDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
       var user = await GetUser();
@@ -83,7 +83,7 @@ namespace Todo.API.Controllers
 
       var todos = _todoService
         .GetAll(user.Id)
-        .Select(todo => new TodoResponse() {
+        .Select(todo => new TodoDto() {
           Id = todo.Id,
           Title = todo.Title,
           Description = todo.Description,
@@ -96,8 +96,8 @@ namespace Todo.API.Controllers
     [Authorize()]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(TodoUpdateResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Update([FromRoute]int id, [FromBody] TodoRequest request)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Update([FromRoute]int id, [FromBody] TodoDto request)
     {
       var user = await GetUser();
       var todo = await _todoService.GetById(id);
@@ -119,14 +119,14 @@ namespace Todo.API.Controllers
 
       var result = await _todoService.Update(todo);
 
-      return Ok(new TodoUpdateResponse(result));
+      return Ok();
     }
 
     [Authorize()]
     [HttpPut("{id}/{field}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(TodoUpdateResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> ToggleIsComplete([FromRoute]int id, [FromRoute]string field, [FromBody]TodoUpdatePartialRequest request)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ToggleIsComplete([FromRoute]int id, [FromRoute]string field, [FromBody]TodoUpdateDto request)
     {
       var user = await GetUser();
       var todo = await _todoService.GetById(id);
@@ -145,12 +145,12 @@ namespace Todo.API.Controllers
       
       var result = await _todoService.Update(todo);
 
-      return Ok(new TodoUpdateResponse(result));
+      return Ok();
     }
 
     [Authorize()]
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(TodoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TodoDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> Delete([FromRoute]int id)
     {
       var user = await GetUser();
@@ -168,7 +168,7 @@ namespace Todo.API.Controllers
 
       todo = await _todoService.Delete(id);
 
-      var response = new TodoResponse() 
+      var response = new TodoDto() 
       {
         Title = todo.Title,
         Description = todo.Description,

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import * as actions from '../store/actions';
 import RequiresAuth from '../auth/RequiresAuth';
@@ -32,7 +34,6 @@ class TodoItems extends Component {
       <TodoItem
         key={todo.id}
         todo={todo}
-        isSelected={todo.id === this.state?.selected?.id}
         onEdit={this.editTodo}
         onDelete={this.deleteTodo}
       />
@@ -42,11 +43,11 @@ class TodoItems extends Component {
       <div className="container-fluid">
         <div className="row">
           <div className="col-md">
-            <div className="d-flex justify-content-between">
-              <h1 className="h3 font-weight-normal mt-1 ml-2">Todo Items</h1>
-              <button className="btn btn-primary mt-1 mb-1 mr-1" onClick={this.addTodo}>+</button>
+            <div className="d-flex justify-content-between pt-2 pb-2">
+              <div></div>
+              <a href="#" className="mr-2" onClick={this.addTodo}><FontAwesomeIcon icon={ faPlus } size="2x" /></a>
             </div>
-            <div className="list-group text-left">
+            <div className="accordion text-left">
             { items }
             </div>
           </div>
