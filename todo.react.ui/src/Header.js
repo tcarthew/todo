@@ -19,9 +19,9 @@ class Header extends Component {
           <li className="nav-item">
             <Link className="nav-link" to="/items">Items</Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link className="nav-link" to="/me">My Profile</Link>
-          </li>
+          </li> */}
           <li className="nav-item">
             <Link className="nav-link" to="#" onClick={this.onLogoutClick}>Logout</Link>
           </li>
@@ -41,7 +41,7 @@ class Header extends Component {
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="/">Todo</a>
+        <a className="navbar-brand" href="#">Todo</a>
 
         <div className="collapse navbar-collapse">
           {this.renderLinks()}

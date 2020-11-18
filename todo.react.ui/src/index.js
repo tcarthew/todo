@@ -13,9 +13,10 @@ import reportWebVitals from './reportWebVitals';
 
 import Login from './auth/Login';
 import Register from './auth/Register';
-import Items from './todos/Items';
 
 import reducers from './store/reducers';
+import TodoItems from './todos/TodoItems';
+import TodoItemAddEdit from './todos/TodoItemAddEdit';
 
 const store = createStore(
   reducers,
@@ -34,7 +35,9 @@ ReactDOM.render(
         <App>
           <Route path="/" exact component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/items" component={Items} />
+          <Route path="/items/:mode/:id" exact component={TodoItemAddEdit} />
+          <Route path="/items/:mode" exact component={TodoItemAddEdit} />
+          <Route path="/items" exact component={TodoItems} />
         </App>
       </BrowserRouter>
     </Provider>

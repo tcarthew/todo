@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Todo.API.Data.Entities;
 using Todo.API.Models.Todo;
+using Todo.API.Models.Auth;
 using Todo.API.Services;
+using System.Linq;
 
 namespace Todo.API.Controllers
 {
@@ -56,18 +57,21 @@ namespace Todo.API.Controllers
 
       var response = new TodoResponse() 
       {
+        Id = todo.Id,
         Title = todo.Title,
         Description = todo.Description,
         IsComplete = todo.IsComplete,
-        LastUpdate = todo.LastUpdate
+        LastUpdate = todo.LastUpdate,
+        User = new UserResponse(todo.User.Id, todo.User.UserName, todo.User.Email)
       };
+
       return Ok(response);
     }
 
     [Authorize()]
     [HttpGet()]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(IList<TodoItem>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<TodoResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
       var user = await GetUser();
@@ -77,7 +81,16 @@ namespace Todo.API.Controllers
         return BadRequest();
       }
 
-      return Ok(_todoService.GetAll(user.Id));
+      var todos = _todoService
+        .GetAll(user.Id)
+        .Select(todo => new TodoResponse() {
+          Id = todo.Id,
+          Title = todo.Title,
+          Description = todo.Description,
+          IsComplete = todo.IsComplete
+        }).ToList();
+
+      return Ok(todos);
     }
 
     [Authorize()]

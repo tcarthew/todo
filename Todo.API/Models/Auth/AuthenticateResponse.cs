@@ -4,16 +4,16 @@ namespace Todo.API.Models.Auth
 {
   public class AuthenticateResponse
   {
-    public string JwtToken { get; set; }
+    public string Token { get; set; }
     public DateTime Expires { get; set; }
 
     public AuthenticateResponse()
     {
     }
 
-    public AuthenticateResponse(string jwtToken, DateTime expires)
+    public AuthenticateResponse(string token, DateTime expires)
     {
-      this.JwtToken = jwtToken;
+      this.Token = token;
       this.Expires = expires;
     }
   }
