@@ -76,7 +76,7 @@ namespace Todo.API.UnitTests
     {
       var options = new Mock<IOptions<AppSettings>>();
 
-      options.Setup(o => o.Value).Returns(new AppSettings() {  Secret = "ABC" });
+      options.Setup(o => o.Value).Returns(new AppSettings() {  Secret = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" });
       
       return options;
     }
