@@ -47,7 +47,7 @@ class TodoItemAddEdit extends Component {
     return (
       <div className="container-fluid">
         <div className="row">
-          <form className="col-md form-todo" onSubmit={handleSubmit(this.onSubmit)}>
+          <form className="col-md" onSubmit={handleSubmit(this.onSubmit)}>
             <h1 className="h3 mb-3 font-weight-normal">Todo Detail</h1>
             {error}
             <div className="form-group text-left">

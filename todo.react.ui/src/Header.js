@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import * as actions from './store/actions'
@@ -19,9 +19,9 @@ class Header extends Component {
           <li className="nav-item">
             <Link className="nav-link" to="/items">Items</Link>
           </li>
-          {/* <li className="nav-item">
+          <li className="nav-item">
             <Link className="nav-link" to="/me">My Profile</Link>
-          </li> */}
+          </li>
           <li className="nav-item">
             <Link className="nav-link" to="#" onClick={this.onLogoutClick}>Logout</Link>
           </li>
@@ -55,4 +55,4 @@ function mapStateToProps(state) {
   return { token: state.auth.token };
 }
 
-export default connect(mapStateToProps, actions)(Header);
+export default withRouter(connect(mapStateToProps, actions)(Header));

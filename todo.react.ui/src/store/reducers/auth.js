@@ -1,36 +1,45 @@
-import { AUTH_USER, AUTH_ERROR, REGISTER_USER } from '../actions/types';
+import { AUTH_USER, AUTH_ERROR, AUTH_REGISTER_USER, AUTH_ME } from '../actions/types';
 
 const INITIAL_STATE = {
   token: '',
   errorMessage: '',
   username: '',
+  me: null,
 };
 
 export default function(state = INITIAL_STATE, action) {
-  if (action.type === AUTH_USER) {
-    updateToken(action.payload);
+  switch (action.type) {
+    case AUTH_USER:
+      updateToken(action.payload);
+      return {
+        ...state,
+        token: action.payload,
+        username: '',
+        errorMessage: ''
+      }
+    
+    case AUTH_ERROR:
+      return {
+        ...state,
+        errorMessage: action.payload
+      }
 
-    return {
-      ...state,
-      token: action.payload,
-      username: '',
-      errorMessage: ''
-    }
-  }
+    case AUTH_REGISTER_USER:
+      return {
+        ...state,
+        username: action.payload,
+        errorMessage: ''
+      };
 
-  if (action.type === AUTH_ERROR) {
-    return {
-      ...state,
-      errorMessage: action.payload
-    }
-  }
+    case AUTH_ME:
+      return {
+        ...state,
+        errorMessage: '',
+        me: {
+          ...action.payload
+        }
+      }
 
-  if (action.type === REGISTER_USER) {
-    return {
-      ...state,
-      username: action.payload,
-      errorMessage: ''
-    };
   }
 
   return state;

@@ -2,7 +2,8 @@
 import { 
   AUTH_USER,
   AUTH_ERROR,
-  REGISTER_USER,
+  AUTH_REGISTER_USER,
+  AUTH_ME,
   TODO_ADD,
   TODO_LIST,
   TODO_ERROR,
@@ -41,7 +42,7 @@ export const register = (formProps, onComplete) => async (dispatch) => {
     };
     
     await axios.post(REGISTER_URL, payload);
-    dispatch({ type: REGISTER_USER, payload: formProps.username });
+    dispatch({ type: AUTH_REGISTER_USER, payload: formProps.username });
     onComplete();
   }
   catch (err) {
@@ -49,7 +50,20 @@ export const register = (formProps, onComplete) => async (dispatch) => {
   }
 }
 
+export const getMe = (token) => async (dispatch) => {
+  try {
+    const response = await axios.get(`${AUTH_URL}/me`, getConfig(token));
+
+    dispatch({ type: AUTH_ME, payload: response.data });
+  }
+  catch(err) {
+    console.log(err);
+    dispatch({ type: AUTH_ERROR, payload: err?.response?.data });
+  }
+}
+
 export const logout = (onComplete) => {
+  onComplete();
   return {
     type: AUTH_USER,
     payload: ''

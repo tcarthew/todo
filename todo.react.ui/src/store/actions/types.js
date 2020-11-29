@@ -1,6 +1,7 @@
 export const AUTH_USER = 'auth_user';
 export const AUTH_ERROR = 'auth_error';
-export const REGISTER_USER = 'register_user';
+export const AUTH_REGISTER_USER = 'auth_register_user';
+export const AUTH_ME = 'auth_me';
 
 export const TODO_ADD = 'todo_add';
 export const TODO_GET = 'todo_get';

@@ -13,6 +13,7 @@ import reportWebVitals from './reportWebVitals';
 
 import Login from './auth/Login';
 import Register from './auth/Register';
+import Me from './auth/Me';
 
 import reducers from './store/reducers';
 import TodoItems from './todos/TodoItems';
@@ -35,6 +36,7 @@ ReactDOM.render(
         <App>
           <Route path="/" exact component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/me" component={Me} />
           <Route path="/items/:mode/:id" exact component={TodoItemAddEdit} />
           <Route path="/items/:mode" exact component={TodoItemAddEdit} />
           <Route path="/items" exact component={TodoItems} />
