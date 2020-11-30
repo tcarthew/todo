@@ -60,7 +60,7 @@ namespace Todo.API.UnitTests.Controllers
     #region Register Tests
 
     [Fact]
-    public async void Register_Returns422ErrorWithEmptyUserDto()
+    public async void Register_Returns_422Error_WithEmptyUserDto()
     {
       var testUserService = CreateMockUserService(null, null);
       var testController = new AuthenticationController(testUserService.Object);
@@ -70,7 +70,7 @@ namespace Todo.API.UnitTests.Controllers
     }
 
     [Fact]
-    public async void Register_Returns422ErrorForDuplicateUser()
+    public async void Register_Returns_422Error_ForDuplicateUser()
     {
       var testUser = new User() { 
         Id = 1,
@@ -88,7 +88,7 @@ namespace Todo.API.UnitTests.Controllers
     }
 
     [Fact]
-    public async void Register_Returns500ErrorForException()
+    public async void Register_Returns_500Error_ForException()
     {
       var testCreateUser = new User() { 
         Id = 1,
@@ -107,7 +107,7 @@ namespace Todo.API.UnitTests.Controllers
     }
 
     [Fact()]
-    public async void Register_Returns201Created()
+    public async void Register_Returns_201Created()
     {
       var testCreateUser = new User() { 
         Id = 1,
@@ -131,7 +131,7 @@ namespace Todo.API.UnitTests.Controllers
     #region Authenticate test
 
     [Fact]
-    public async void Authenticate_Returns400BadRequest()
+    public async void Authenticate_Returns_400BadRequest()
     {
       var mockUserService = CreateMockUserService(null, null);
 
@@ -144,7 +144,7 @@ namespace Todo.API.UnitTests.Controllers
     }
 
     [Fact]
-    public async void Authenticate_Returns200OKWithJwtToken()
+    public async void Authenticate_Returns_200OK_WithJwtToken()
     {
       var testUser = new User() { 
         Id = 1,
@@ -170,7 +170,7 @@ namespace Todo.API.UnitTests.Controllers
     #region Me
 
     [Fact]
-    public async void Me_ReturnsUnauthorizedWhenNoTokenSpecified()
+    public async void Me_Returns_Unauthorized_WhenNoTokenSpecified()
     {
       var testController = new AuthenticationController(CreateMockUserService(null, null).Object);
       var mockControllerContext = new ControllerContext() { HttpContext = _mockHttpContext };
@@ -183,7 +183,7 @@ namespace Todo.API.UnitTests.Controllers
     }
 
     [Fact]
-    public async void Me_ReturnsUnauthorizedTokenHasInvalidId()
+    public async void Me_Returns_Unauthorized_TokenHasInvalidId()
     {
       var testController = new AuthenticationController(CreateMockUserService(null, null).Object);
       var mockControllerContext = new ControllerContext() { HttpContext = _mockHttpContext };
@@ -197,7 +197,7 @@ namespace Todo.API.UnitTests.Controllers
     }
 
     [Fact]
-    public async void Me_ReturnsBadRequestWhenNoUserFound()
+    public async void Me_Returns_BadRequest_WhenNoUserFound()
     {
       var testController = new AuthenticationController(CreateMockUserService(null, null).Object);
       var mockControllerContext = new ControllerContext() { HttpContext = _mockHttpContext };
@@ -211,7 +211,7 @@ namespace Todo.API.UnitTests.Controllers
     }
 
     [Fact]
-    public async void Me_Returns200OKForValidToken()
+    public async void Me_Returns_200OK_ForValidToken()
     {
       var testUser = new User() { 
         Id = 1,
