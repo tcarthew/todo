@@ -89,11 +89,13 @@ namespace Todo.API.UnitTests.Controllers
       Assert.IsType<OkObjectResult>(result);
 
       var userDto = ((OkObjectResult)result).Value as UserDto;
+      var expected = "test@test.com";
+      var expectedId = 1;
 
       Assert.NotNull(userDto);
-      Assert.Equal(userDto.Id, 1);
-      Assert.Equal(userDto.Email, "test@test.com");
-      Assert.Equal(userDto.Username, "test@test.com");
+      Assert.Equal(userDto.Id, expectedId);
+      Assert.Equal(userDto.Email, expected);
+      Assert.Equal(userDto.Username, expected);
     }
 
     #endregion
@@ -109,9 +111,10 @@ namespace Todo.API.UnitTests.Controllers
       Assert.IsType<OkObjectResult>(result);
 
       var users = ((OkObjectResult)result).Value as List<UserDto>;
+      var expected = 3;
 
-      Assert.Equal(users.Count, 3);
-      Assert.Equal(users.OfType<UserDto>().Count(), 3);
+      Assert.Equal(users.Count, expected);
+      Assert.Equal(users.OfType<UserDto>().Count(), expected);
     }
 
     #endregion

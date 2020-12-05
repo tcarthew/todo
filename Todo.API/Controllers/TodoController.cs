@@ -123,10 +123,10 @@ namespace Todo.API.Controllers
     }
 
     [Authorize()]
-    [HttpPut("{id}/{field}")]
+    [HttpPut("{id}/IsComplete")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> ToggleIsComplete([FromRoute]int id, [FromRoute]string field, [FromBody]TodoUpdateDto request)
+    public async Task<IActionResult> ToggleIsComplete([FromRoute]int id, [FromBody]TodoUpdateDto request)
     {
       var user = await GetUser();
       var todo = await _todoService.GetById(id);
@@ -141,7 +141,7 @@ namespace Todo.API.Controllers
         return Forbid();
       }
 
-      todo.UpdateField(field, request.Value);
+      todo.UpdateField("IsComplete", request.Value);
       
       var result = await _todoService.Update(todo);
 

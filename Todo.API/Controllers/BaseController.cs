@@ -35,7 +35,7 @@ namespace Todo.API.Controllers
 
     protected async Task<User> GetUser()
     {
-      var tokenIdClaim = Token.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
+      var tokenIdClaim = Token != null ? Token.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId) : null;
 
       if (tokenIdClaim == null)
       {

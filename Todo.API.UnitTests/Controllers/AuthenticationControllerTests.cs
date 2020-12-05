@@ -120,9 +120,10 @@ namespace Todo.API.UnitTests.Controllers
         Email = "test@test.com",
         Password = "test123"
       });
+      var expectedRouteName = "User_GetById";
 
       Assert.IsType<CreatedAtRouteResult>(result);
-      Assert.Equal((result as CreatedAtRouteResult).RouteName, "User_GetById");
+      Assert.Equal((result as CreatedAtRouteResult).RouteName, expectedRouteName);
       Assert.Equal((result as CreatedAtRouteResult).RouteValues["id"], testCreateUser.Id);
     }
 
