@@ -9,3 +9,6 @@ export const TODO_UPDATE = 'todo_update';
 export const TODO_DELETE = 'todo_delete';
 export const TODO_LIST = 'todo_list';
 export const TODO_ERROR = 'todo_error';
+
+export const LOADED = 'loaded';
+export const NOT_LOADED = 'not_loaded'

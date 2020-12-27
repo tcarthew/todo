@@ -1,58 +1,59 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
-import { compose } from 'redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import * as actions from '../store/actions';
+import { register } from '../store/mutations/auth';
 
-class Register extends Component {
-  onSubmit = (formProps) => {
-    this.props.register(formProps, () => {
-      this.props.history.push("/");
-    });
+const Register = () => {
+  const dispatch = useDispatch();
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const { loaded } = useSelector(state => state);
+  const { errorMessage, username: registeredUsername } = useSelector(state => state.auth);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await register(dispatch, username, password);
   }
 
-  render() {
-    const { handleSubmit, errorMessage } = this.props;
-    const error = errorMessage ? <div className="alert alert-danger">{ errorMessage }</div> : null;
+  const error = loaded && errorMessage ? <div className="alert alert-danger">{ errorMessage }</div> : null;
+  const registered = loaded && registeredUsername;
+  const registrationSuccess = 
+    <div className="alert alert-success">
+      { registeredUsername } registered! Proceed to <Link to="/">Login</Link>
+    </div>;
+  const registrationForm = 
+    <form className="form-todo" onSubmit={handleSubmit}>
+      <h1 className="h3 mb-3 font-weight-normal">Register</h1>
+      { error }
+      <div className="form-group text-left">
+        <label>Email Address</label>
+        <input
+          type="text"
+          name="username"
+          autoComplete="none"
+          className="form-control"
+          placeholder="Email"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div className="form-group text-left">
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          autoComplete="none"
+          className="form-control"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <button className="btn btn-lg btn-primary btn-block">Register</button>
+    </form>
 
-    return (
-      <form className="form-todo" onSubmit={handleSubmit(this.onSubmit)}>
-        <h1 className="h3 mb-3 font-weight-normal">Register</h1>
-        { error }
-        <div className="form-group text-left">
-          <label>Email address</label>
-          <Field
-            name="username"
-            type="text"
-            component="input"
-            autoComplete="none"
-            className="form-control"
-            placeholder="Email"
-          />
-        </div>
-        <div className="form-group text-left">
-          <label>Password</label>
-          <Field
-            name="password"
-            type="password"
-            component="input"
-            autoComplete="none"
-            className="form-control"
-            placeholder="Password"
-          />
-        </div>
-        <button className="btn btn-lg btn-primary btn-block">Register</button>
-      </form>
-    )
-  }
+  return registered ? registrationSuccess : registrationForm;
 }
 
-function mapStateToProps(state) {
-  return { errorMessage: state.auth.errorMessage };
-}
-
-export default compose(
-  connect(mapStateToProps, actions),
-  reduxForm({ form: 'registerForm' })
-)(Register);
+export default Register;

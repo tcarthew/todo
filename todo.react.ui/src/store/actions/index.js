@@ -2,7 +2,6 @@
 import { 
   AUTH_USER,
   AUTH_ERROR,
-  AUTH_REGISTER_USER,
   AUTH_ME,
   TODO_ADD,
   TODO_LIST,
@@ -15,40 +14,6 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000';
 const AUTH_URL = `${API_URL}/api/auth`;
-const REGISTER_URL = `${AUTH_URL}/register`;
-
-// auth
-export const login = (formProps, onComplete) => async (dispatch) => {
-  try {
-    const payload = {
-      email: formProps.username,
-      password: formProps.password
-    };
-    const response = await axios.post(AUTH_URL, payload);
-
-    dispatch({ type: AUTH_USER, payload: response.data.token });
-    onComplete();
-  } catch (err) {
-    console.log('error: ', err.response.data);
-    dispatch({ type: AUTH_ERROR, payload: 'Invalid username or password' });
-  }
-}
-
-export const register = (formProps, onComplete) => async (dispatch) => {
-  try {
-    const payload = {
-      email: formProps.username,
-      password: formProps.password
-    };
-    
-    await axios.post(REGISTER_URL, payload);
-    dispatch({ type: AUTH_REGISTER_USER, payload: formProps.username });
-    onComplete();
-  }
-  catch (err) {
-    dispatch({ type: AUTH_ERROR, payload: err.response.data });
-  }
-}
 
 export const getMe = (token) => async (dispatch) => {
   try {

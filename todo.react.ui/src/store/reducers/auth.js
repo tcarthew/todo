@@ -15,19 +15,19 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         token: action.payload,
         username: '',
-        errorMessage: ''
+        errorMessage: '',
       }
     
     case AUTH_ERROR:
       return {
         ...state,
-        errorMessage: action.payload
+        errorMessage: action.payload,
       }
 
     case AUTH_REGISTER_USER:
       return {
         ...state,
-        username: action.payload,
+        username: action.payload.username,
         errorMessage: ''
       };
 
