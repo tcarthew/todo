@@ -1,8 +1,5 @@
 
 import { 
-  AUTH_USER,
-  AUTH_ERROR,
-  AUTH_ME,
   TODO_ADD,
   TODO_LIST,
   TODO_ERROR,
@@ -13,27 +10,6 @@ import {
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000';
-const AUTH_URL = `${API_URL}/api/auth`;
-
-export const getMe = (token) => async (dispatch) => {
-  try {
-    const response = await axios.get(`${AUTH_URL}/me`, getConfig(token));
-
-    dispatch({ type: AUTH_ME, payload: response.data });
-  }
-  catch(err) {
-    console.log(err);
-    dispatch({ type: AUTH_ERROR, payload: err?.response?.data });
-  }
-}
-
-export const logout = (onComplete) => {
-  onComplete();
-  return {
-    type: AUTH_USER,
-    payload: ''
-  };
-}
 
 // todos
 const TODOS_URL = `${API_URL}/api/todos`;

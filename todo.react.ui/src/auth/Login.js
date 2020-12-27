@@ -28,27 +28,31 @@ const Login = () => {
   }
 
   return (
-    <form className="form-todo" method="POST" onSubmit={handleSubmit}>
+    <form className="form-center" method="POST" onSubmit={handleSubmit}>
       <h1 className="h3 mb-3 font-weight-normal">Login</h1>
       { error }
-      <label className="sr-only">Username</label>
-      <input
-        type="text"
-        name="username"
-        autoComplete="none"
-        className="form-control"
-        placeholder="Username"
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <label className="sr-only">Password</label>
-      <input
-        type="password"
-        name="password"
-        autoComplete="none"
-        className="form-control"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <div className="form-group text-left">
+        <label>Username</label>
+        <input
+          type="text"
+          name="username"
+          autoComplete="none"
+          className="form-control"
+          placeholder="Username"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div className="form-group text-left">
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          autoComplete="none"
+          className="form-control"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
       <button className="btn btn-lg btn-primary btn-block">Login</button>
       <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
     </form>

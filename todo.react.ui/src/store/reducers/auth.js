@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   token: '',
   errorMessage: '',
   username: '',
-  me: null,
+  me: {},
 };
 
 export default function(state = INITIAL_STATE, action) {

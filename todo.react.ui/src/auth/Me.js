@@ -1,60 +1,54 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
-import { compose } from 'redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import * as actions from '../store/actions';
+import { me } from '../store/queries/auth'; 
 
-class Me extends Component {
+const Me = () => {
+  const dispatch = useDispatch();
 
-  componentDidMount() {
-    this.props.getMe(this.props.token);
-  }
+  const { loaded } = useSelector(state => state);
+  const token = useSelector(state => state.auth.token);
+  const profile = useSelector(state => state.auth.me);
 
-  render() {
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <form className="col-md">
-            <h1 className="h3 mb-3 font-weight-normal">Me</h1>
-            <div className="form-group text-left">
-              <label>Username</label>
-              <Field
-                name="username"
-                type="text"
-                component="input"
-                autoComplete="none"
-                className="form-control"
-                placeholder="Username"
-              />
-            </div>
-            <div className="form-group text-left">
-              <label>Email</label>
-              <Field
-                name="email"
-                type="text"
-                component="input"
-                autoComplete="none"
-                className="form-control"
-                placeholder="Email"
-              />
-            </div>
-          </form>
+  useEffect(() => {
+    if (!loaded) {
+      me(dispatch, token);
+    }
+  });
+  
+  return (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="form-center">
+          <h1 className="h3 mb-3 font-weight-normal">Me</h1>
+          <div className="form-group text-left">
+            <label>Username</label>
+            <input
+              type="text"
+              name="username"
+              autoComplete="none"
+              className="form-control"
+              placeholder="Username"
+              readOnly
+              value={profile?.username}
+            />
+          </div>
+          <div className="form-group text-left">
+            <label>Email</label>
+            <input
+              type="text"
+              name="email"
+              autoComplete="none"
+              className="form-control"
+              placeholder="Email"
+              readOnly
+              value={profile?.email}
+            />
+          </div>
         </div>
       </div>
-    )
-  }
+    </div>
+  );
 }
 
-function mapStateToProps(state) {
-  return {
-    token: state.auth.token,
-    initialValues: state.auth.me
-  }
-}
-
-export default compose(
-  connect(mapStateToProps, actions),
-  reduxForm({ form: 'meForm', enableReinitialize: true })
-)(Me);
-
+export default Me;

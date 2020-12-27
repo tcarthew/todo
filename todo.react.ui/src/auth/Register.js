@@ -25,7 +25,7 @@ const Register = () => {
       { registeredUsername } registered! Proceed to <Link to="/">Login</Link>
     </div>;
   const registrationForm = 
-    <form className="form-todo" onSubmit={handleSubmit}>
+    <form className="form-center" onSubmit={handleSubmit}>
       <h1 className="h3 mb-3 font-weight-normal">Register</h1>
       { error }
       <div className="form-group text-left">

@@ -1,19 +1,22 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'connected-react-router';
 
-import * as actions from './store/actions'
+import { authenticateLogout } from './store/actions/auth';
 
-class Header extends Component {
+const Header = () => {
+  const dispatch = useDispatch();
 
-  onLogoutClick = () => {
-    this.props.logout(() => {
-      this.props.history.push("/");
-    });
+  const token = useSelector(state => state.auth.token);
+
+  const logoutClick = () => {
+    dispatch(authenticateLogout());
+    dispatch(push('/'));
   }
 
-  renderLinks() {
-    if (this.props.token) {
+  const renderLinks = () => {
+    if (token) {
       return (
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
@@ -23,7 +26,7 @@ class Header extends Component {
             <Link className="nav-link" to="/me">My Profile</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="#" onClick={this.onLogoutClick}>Logout</Link>
+            <Link className="nav-link" to="#" onClick={() => logoutClick()}>Logout</Link>
           </li>
         </ul>
       );
@@ -38,21 +41,15 @@ class Header extends Component {
     );
   }
 
-  render() {
-    return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="#">Todo</a>
+  return (
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <a className="navbar-brand" href="/">Todo</a>
 
-        <div className="collapse navbar-collapse">
-          {this.renderLinks()}
-        </div>
-      </nav>
-    )
-  }
+      <div className="collapse navbar-collapse">
+        { renderLinks() }
+      </div>
+    </nav>
+  )
 }
 
-function mapStateToProps(state) {
-  return { token: state.auth.token };
-}
-
-export default withRouter(connect(mapStateToProps, actions)(Header));
+export default Header;
