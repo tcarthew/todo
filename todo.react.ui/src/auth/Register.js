@@ -16,10 +16,9 @@ const Register = ({ onCancel, onSubmit }) => {
     });
     const dispatch = useDispatch();
     const { error, loading, username } = useSelector(state => state.auth);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const { username, password } = fields;
 
         register(dispatch, username, password);
@@ -34,9 +33,8 @@ const Register = ({ onCancel, onSubmit }) => {
     }, [username, loading])
 
     return (
-        
-            <form onSubmit={handleSubmit}>
-                <div className="container-fluid">
+        <form onSubmit={handleSubmit}>
+            <div className="container-fluid">
                 <div className="row">
                     <div className="col-12">
                         {error ? <div className="alert alert-danger">{error}</div> : null}
@@ -71,16 +69,16 @@ const Register = ({ onCancel, onSubmit }) => {
                 <div className="row justify-content-center">
                     <div className="col-8">
                         <button className="btn btn-sm btn-secondary" style={buttonStyle} onClick={onCancel}>Cancel</button>&nbsp;
-                        { !loading && <button className="btn btn-sm btn-primary" style={buttonStyle}>Register</button> }
-                        { loading &&
+                    {!loading && <button className="btn btn-sm btn-primary" style={buttonStyle}>Register</button>}
+                        {loading &&
                             <div className="spinner-border text-primary" role="status">
                                 <span className="sr-only">Loading...</span>
-                            </div> }
+                            </div>}
                     </div>
                 </div>
-                </div>
-            </form>
-        
+            </div>
+        </form >
+
     );
 }
 
