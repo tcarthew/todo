@@ -12,14 +12,13 @@ import RouteGuard from './RouteGuard';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import Me from './auth/Me';
-import TodoItems from './todos/TodoItems';
-import TodoItemAddEdit from './todos/TodoItemAddEdit';
+import ItemsList from './todos/ItemsList'
+import ItemForm from './todos/ItemForm';
 
 import configureStore from './store/configure';
 
 const history = createBrowserHistory({})
 const store = configureStore(history, {
-    loaded: false,
     auth: {
         token: localStorage.getItem('token')
     }
@@ -32,9 +31,9 @@ ReactDOM.render(
                 <Route path="/" exact component={Login} />
                 <Route path="/register" component={Register} />
                 <Route path="/me" component={Me} />
-                <RouteGuard path="/items/:mode/:id" exact component={TodoItemAddEdit} />
-                <RouteGuard path="/items/:mode" exact component={TodoItemAddEdit} />
-                <RouteGuard path="/items" exact component={TodoItems} />
+                {/* <RouteGuard path="/items/:mode/:id" exact component={ItemForm} />
+                <RouteGuard path="/items/:mode" exact component={ItemForm} /> */}
+                <RouteGuard path="/items" exact component={ItemsList} />
             </App>
         </ConnectedRouter>
     </Provider>,

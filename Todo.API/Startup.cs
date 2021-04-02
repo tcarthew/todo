@@ -99,6 +99,7 @@ namespace Todo.API
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
+                .WithExposedHeaders("Location")
             );
 
             app.UseAuthentication();

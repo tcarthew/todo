@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 
-const FormDialog = (props, ref) => {
+const FormDialog = (props) => {
     const { title, onSuccess, onCancel, showDialog, children } = props;
     const [show, setShow] = useState(false);
     

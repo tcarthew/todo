@@ -5,12 +5,11 @@ export const AUTH_ME = 'auth_me';
 export const AUTH_BEGIN = 'auth_begin';
 export const AUTH_END = 'auth_end';
 
-export const TODO_ADD = 'todo_add';
-export const TODO_GET = 'todo_get';
-export const TODO_UPDATE = 'todo_update';
-export const TODO_DELETE = 'todo_delete';
-export const TODO_LIST = 'todo_list';
-export const TODO_ERROR = 'todo_error';
-
-export const LOADED = 'loaded';
-export const NOT_LOADED = 'not_loaded'
+export const TODO_SET_SELECTED = 'todo_set_selected';
+export const TODO_SET_LIST = 'todo_set_list';
+export const TODO_LOAD_BEGIN = 'todo_load_begin';
+export const TODO_ADDED = 'todo_added';
+export const TODO_DELETED = 'todo_deleted';
+export const TODO_LOAD_END = 'todo_load_end';
+export const TODO_SET_ERROR = 'todo_set_error';
+export const TODO_EDITED = 'todo_edited';

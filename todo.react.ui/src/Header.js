@@ -45,13 +45,15 @@ const Header = ({ onRegisterUser }) => {
     }
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a className="navbar-brand" href="/">Todo</a>
+        <div className="col">
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <a className="navbar-brand" href="/">Todo</a>
 
-            <div className="collapse navbar-collapse">
-                {renderLinks()}
-            </div>
-        </nav>
+                <div className="collapse navbar-collapse">
+                    {renderLinks()}
+                </div>
+            </nav>
+        </div>
     )
 }
 
