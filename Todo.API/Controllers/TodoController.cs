@@ -62,6 +62,7 @@ namespace Todo.API.Controllers
         Description = todo.Description,
         IsComplete = todo.IsComplete,
         LastUpdate = todo.LastUpdate,
+        Created = todo.Created,
         User = new UserDto(todo.User.Id, todo.User.UserName, todo.User.Email)
       };
 
@@ -87,7 +88,8 @@ namespace Todo.API.Controllers
           Id = todo.Id,
           Title = todo.Title,
           Description = todo.Description,
-          IsComplete = todo.IsComplete
+          IsComplete = todo.IsComplete,
+          LastUpdate = todo.LastUpdate
         }).ToList();
 
       return Ok(todos);

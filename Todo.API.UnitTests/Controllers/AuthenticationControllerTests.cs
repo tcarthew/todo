@@ -35,11 +35,11 @@ namespace Todo.API.UnitTests.Controllers
       mockUserService.Setup(m => m.GetUserById(It.IsAny<Int64>())).ReturnsAsync(stubGetUser);
 
       if (!throwsErrorOnCreate) {
-        mockUserService.Setup(m => m.CreateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(stubCreateUser);
+        mockUserService.Setup(m => m.CreateAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(stubCreateUser);
       }
       
       if (throwsErrorOnCreate){
-          mockUserService.Setup(m => m.CreateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception("Test Error"));
+          mockUserService.Setup(m => m.CreateAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception("Test Error"));
       }
       
       mockUserService.Setup(m => m.CreateAuthorizationToken(It.IsAny<User>())).ReturnsAsync(CreateDummyToken());

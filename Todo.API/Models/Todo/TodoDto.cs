@@ -10,6 +10,7 @@ namespace Todo.API.Models.Todo
     public string Description { get; set; }
     public bool IsComplete { get; set; }
     public DateTime? LastUpdate { get; set; }
+    public DateTime Created { get; set; }
 
     public UserDto User { get; set; }
   }

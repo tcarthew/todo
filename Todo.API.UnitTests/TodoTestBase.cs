@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -21,8 +20,8 @@ namespace Todo.API.UnitTests
     
     private IList<User> _mockUsers = new List<User>()
     {
-      new User() { Id = 1, Email = "test1@test.com" },
-      new User() { Id = 2, Email = "test2@test.com" }
+      new User() { Id = 1, Email = "test1@test.com", FirstName = "Test", LastName = "One" },
+      new User() { Id = 2, Email = "test2@test.com", FirstName = "Test", LastName = "Two" }
     };
 
     public TodoTestBase()
