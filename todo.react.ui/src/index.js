@@ -9,11 +9,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import RouteGuard from './RouteGuard';
 
-import Login from './auth/Login';
-import Register from './auth/Register';
-import Me from './auth/Me';
-import ItemsList from './todos/ItemsList'
-import ItemForm from './todos/ItemForm';
+import Login from './containers/Login';
+import Me from './containers/Me';
+import ItemsList from './containers/ItemsList'
 
 import configureStore from './store/configure';
 
@@ -21,6 +19,10 @@ const history = createBrowserHistory({})
 const store = configureStore(history, {
     auth: {
         token: localStorage.getItem('token')
+    },
+    using: {
+        error: '',
+        loading: false
     }
 });
 
@@ -29,10 +31,7 @@ ReactDOM.render(
         <ConnectedRouter history={history}>
             <App>
                 <Route path="/" exact component={Login} />
-                <Route path="/register" component={Register} />
                 <Route path="/me" component={Me} />
-                {/* <RouteGuard path="/items/:mode/:id" exact component={ItemForm} />
-                <RouteGuard path="/items/:mode" exact component={ItemForm} /> */}
                 <RouteGuard path="/items" exact component={ItemsList} />
             </App>
         </ConnectedRouter>

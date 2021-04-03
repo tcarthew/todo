@@ -47,19 +47,17 @@ const ItemForm = ({ item, onCancel, onSave }) => {
                             onChange={setFieldValue}
                         />
                     </div>
-                    <div className="form-group form-check text-left">
+                    <div className="form-group text-left">
                         <input
                             name="isComplete"
-                            component="input"
                             type="checkbox"
-                            className="form-check-input form-control-sm"
                             checked={fields.isComplete}
                             onChange={setFieldValue}
-                        />
+                        />&nbsp;
                         <label className="form-check-label">Is Complete</label>
                     </div>
                     <div className="d-flex justify-content-end">
-                    <button className="btn btn-default w-25" onClick={handleCancel}>Cancel</button>
+                        <button className="btn btn-default w-25" onClick={handleCancel}>Cancel</button>
                         <button type="submit" className="btn btn-primary w-25 mr-2">Save</button>
                     </div>
                 </form>

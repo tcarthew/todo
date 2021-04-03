@@ -3,10 +3,12 @@ import { combineReducers } from 'redux';
 
 import auth from './auth';
 import todos from './todos';
+import users from './users';
 
 const configureReducers = (history) => combineReducers({
   auth,
   todos,
+  users,
   router: connectRouter(history)
 });
 

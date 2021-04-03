@@ -89,6 +89,7 @@ namespace Todo.API.Controllers
           Title = todo.Title,
           Description = todo.Description,
           IsComplete = todo.IsComplete,
+          Created = todo.Created,
           LastUpdate = todo.LastUpdate
         }).ToList();
 

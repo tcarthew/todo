@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Header from './Header';
 import FormDialog from './dialogs/FormDialog';
-import Register from './auth/Register';
+import Register from './components/Register';
 
 
 const App = ({ children }) => {

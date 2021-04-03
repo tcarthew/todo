@@ -13,5 +13,6 @@ namespace Todo.API.Services
     Task<User> GetUserById(long userId);
     Task<bool> CheckPasswordAsync(User user, string password);
     Task<SecurityToken> CreateAuthorizationToken(User user);
+    Task<bool> UpdateAsync(User user);
   } 
 }

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import Moment from 'moment';
 
 import { getTodos } from '../store/queries/todos';
 import { deleteTodo, createTodo, updateTodo } from '../store/mutations/todos';
-import ItemForm from './ItemForm';
+import ItemForm from '../components/ItemForm';
 import ConfirmDialog from '../dialogs/ConfirmDialog';
 
 const ItemsList = () => {
@@ -68,6 +69,13 @@ const ItemsList = () => {
         }
         setShowForm(false);
     }
+    const displayComplete = (item) => {
+        if (item && item.isComplete) {
+            return Moment(item.lastUpdate).format('yyyy-MM-DD hh:mm:ss');
+        }
+
+        return '';
+    }
 
     useEffect(() => {
         getTodos(dispatch, token);
@@ -86,6 +94,8 @@ const ItemsList = () => {
                         <thead>
                             <tr>
                                 <th>Title</th>
+                                <th>Created</th>
+                                <th>Completed</th>
                                 <th>Complete?</th>
                                 <th>&nbsp;</th>
                                 <th><a href="#" className="mr-2" onClick={handleAdd}><FontAwesomeIcon icon={faPlus} /></a></th>
@@ -95,6 +105,8 @@ const ItemsList = () => {
                             {items.map(todo => (
                                 <tr key={todo.id}>
                                     <td>{todo.title}</td>
+                                    <td>{ Moment(todo.created).format('yyyy-MM-DD hh:mm:ss') }</td>
+                                    <td>{ displayComplete(todo) }</td>
                                     <td>{todo.isComplete ? 'Yes' : 'No'}</td>
                                     <td><a href="#" className="mr-2" onClick={() => handleEdit(todo)}><FontAwesomeIcon icon={faEdit} /></a></td>
                                     <td><a href="#" className="mr-1" onClick={() => handleDelete(todo)}><FontAwesomeIcon icon={faTrash} /></a></td>
