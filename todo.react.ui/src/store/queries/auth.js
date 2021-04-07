@@ -1,31 +1,38 @@
 import axios from 'axios';
+import { push } from 'connected-react-router';
 
-import { loaded, notLoaded } from '../actions/loaded';
-import { authenticateUser, authenticateError, authenticateMe } from '../actions/auth';
+import {
+    authenticateUser,
+    authenticateError,
+    authenticateMe,
+    authenticateBegin,
+    authenticateEnd
+} from '../actions/auth';
 
 const API_URL = 'http://localhost:5000';
 const AUTH_URL = `${API_URL}/api/auth`;
 const ME_URL = `${AUTH_URL}/me`;
 
-export const authenticate = async (dispatch, username, password) => {
-  dispatch(notLoaded());
+export const authenticate = async (dispatch, user) => {
+  dispatch(authenticateBegin());
   try {
     const payload = {
-      email: username,
-      password
+      email: user.username,
+      password: user.password
     };
     const response = await axios.post(AUTH_URL, payload);
 
     dispatch(authenticateUser(response.data.token));
+    dispatch(push('/items'));
   } catch (err) {
     dispatch(authenticateError('Invalid username or password'));
   } finally {
-    dispatch(loaded());
+    dispatch(authenticateEnd());
   }
 }
 
 export const me = async (dispatch, token) => {
-  dispatch(notLoaded());
+  dispatch(authenticateBegin());
   try {
     const header = {
       headers: {
@@ -38,6 +45,6 @@ export const me = async (dispatch, token) => {
   } catch (err) {
     dispatch(authenticateError('Unable to retrieve details: ', err.message));
   } finally {
-    dispatch(loaded());
+    dispatch(authenticateEnd());
   }
 }

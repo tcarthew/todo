@@ -30,7 +30,7 @@ namespace Todo.API.Services
         {
             user.EmailConfirmed = true;
             user.SecurityStamp = Guid.NewGuid().ToString();
-    
+
             var result = await _userManager.CreateAsync(user, password);
             await _context.SaveChangesAsync();
             await _userManager.AddToRoleAsync(user, role);
@@ -62,12 +62,11 @@ namespace Todo.API.Services
         public async Task<SecurityToken> CreateAuthorizationToken(User user)
         {
             var roles = await _userManager.GetRolesAsync(user);
-            var claims = new List<Claim>()
-      {
-        new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-      };
+            var claims = new List<Claim>() {
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
             claims.AddRange(roles.Select(r => new Claim("role", r)));
 
@@ -78,6 +77,13 @@ namespace Todo.API.Services
               claims: claims,
               signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
             );
+        }
+
+        public async Task<bool> UpdateAsync(User user)
+        {
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded;
         }
     }
 }

@@ -1,56 +1,76 @@
-import { AUTH_USER, AUTH_ERROR, AUTH_REGISTER_USER, AUTH_ME } from '../actions/types';
+import {
+    AUTH_USER,
+    AUTH_ERROR,
+    AUTH_REGISTER_USER,
+    AUTH_ME,
+    AUTH_BEGIN,
+    AUTH_END
+} from '../actions/types';
 
 const INITIAL_STATE = {
-  token: '',
-  errorMessage: '',
-  username: '',
-  me: {},
+    token: '',
+    error: '',
+    username: '',
+    me: undefined,
+    loading: false
 };
 
-export default function(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case AUTH_USER:
-      updateToken(action.payload);
-      return {
-        ...state,
-        token: action.payload,
-        username: '',
-        errorMessage: '',
-      }
-    
-    case AUTH_ERROR:
-      return {
-        ...state,
-        errorMessage: action.payload,
-      }
+export default function (state = INITIAL_STATE, action) {
+    switch (action.type) {
+        case AUTH_USER:
+            updateToken(action.payload);
+            return {
+                ...state,
+                token: action.payload,
+                username: '',
+                error: '',
+            }
 
-    case AUTH_REGISTER_USER:
-      return {
-        ...state,
-        username: action.payload.username,
-        errorMessage: ''
-      };
+        case AUTH_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+            }
 
-    case AUTH_ME:
-      return {
-        ...state,
-        errorMessage: '',
-        me: {
-          ...action.payload
-        }
-      }
+        case AUTH_REGISTER_USER:
+            return {
+                ...state,
+                username: action.payload.username,
+                error: ''
+            };
 
-  }
+        case AUTH_ME:
+            return {
+                ...state,
+                error: '',
+                me: {
+                    ...action.payload
+                }
+            }
 
-  return state;
+        case AUTH_BEGIN:
+            return {
+                ...state,
+                loading: true,
+                error: ''
+            }
+
+        case AUTH_END:
+            return {
+                ...state,
+                loading: false
+            }
+    }
+
+    return state;
 }
 
 function updateToken(token) {
-  if (token) {
-    localStorage.setItem('token', token);
-  }
+    if (token) {
+        localStorage.setItem('token', token);
+    }
 
-  if (!token) {
-    localStorage.removeItem('token');
-  }
+    if (!token) {
+        localStorage.removeItem('token');
+    }
 }

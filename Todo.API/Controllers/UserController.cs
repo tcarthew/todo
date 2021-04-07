@@ -53,5 +53,30 @@ namespace Todo.API.Controllers
 
       return Ok(users);
     }
+
+    [Authorize(Roles = "Admin, User")]
+    [HttpPut("name")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateName([FromBody]UserDto userDto)
+    {
+        var user = await GetUser();
+
+        if (user == null) {
+            return Unauthorized();
+        }
+
+        user.FirstName = userDto.FirstName;
+        user.LastName = userDto.LastName;
+        
+        var result = await _userService.UpdateAsync(user);
+
+        if (!result) {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
   }
 }
