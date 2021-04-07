@@ -5,7 +5,7 @@ import { useFormFieldValues } from '../hooks/useFormFields';
 
 const ItemForm = ({ item, onCancel, onSave }) => {
     const { error } = useSelector(state => state.todos);
-    const [fields, setFieldValue] = useFormFieldValues(item);
+    const [fields, setFieldValue, resetFieldValues] = useFormFieldValues(item);
     const handleSubmit = () => {
         if (onSave) {
             onSave(fields);
@@ -16,6 +16,11 @@ const ItemForm = ({ item, onCancel, onSave }) => {
             onCancel();
         }
     }
+
+
+    useEffect(() => {
+        resetFieldValues(item);
+    }, [item]);
 
     return (
         <div className="container-fluid">

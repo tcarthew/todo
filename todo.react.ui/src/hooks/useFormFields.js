@@ -10,6 +10,9 @@ const useFormFieldValues = (initialState) => {
                 ...fields,
                 [event.target.name ?? event.target.id]: event.target.type !== 'checkbox' ? event.target.value : event.target.checked
             });
+        },
+        (values) => {
+            setFieldValues({ ...values });
         }
     ]
 }

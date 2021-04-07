@@ -79,7 +79,7 @@ const ItemsList = () => {
 
     useEffect(() => {
         getTodos(dispatch, token);
-    }, [])
+    }, []);
 
     return (
         <div className="col">
