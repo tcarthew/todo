@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Todo.API.Data.Entities;
 using Todo.API.Models.Todo;
+using Todo.API.Models.Auth;
 using Todo.API.Services;
+using System.Linq;
 
 namespace Todo.API.Controllers
 {
@@ -26,7 +27,7 @@ namespace Todo.API.Controllers
     [HttpPost()]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> Create([FromBody] TodoRequest request)
+    public async Task<IActionResult> Create([FromBody] TodoDto request)
     {
       var user = await GetUser();
 
@@ -43,7 +44,7 @@ namespace Todo.API.Controllers
     [Authorize()]
     [HttpGet("{id}", Name = "Todos_GetById")]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(TodoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TodoDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
       var user = await GetUser();
@@ -54,20 +55,24 @@ namespace Todo.API.Controllers
         return Forbid();
       }
 
-      var response = new TodoResponse() 
+      var response = new TodoDto() 
       {
+        Id = todo.Id,
         Title = todo.Title,
         Description = todo.Description,
         IsComplete = todo.IsComplete,
-        LastUpdate = todo.LastUpdate
+        LastUpdate = todo.LastUpdate,
+        Created = todo.Created,
+        User = new UserDto(todo.User.Id, todo.User.UserName, todo.User.Email)
       };
+
       return Ok(response);
     }
 
     [Authorize()]
     [HttpGet()]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(IList<TodoItem>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<TodoDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
       var user = await GetUser();
@@ -77,14 +82,24 @@ namespace Todo.API.Controllers
         return BadRequest();
       }
 
-      return Ok(_todoService.GetAll(user.Id));
+      var todos = _todoService
+        .GetAll(user.Id)
+        .Select(todo => new TodoDto() {
+          Id = todo.Id,
+          Title = todo.Title,
+          Description = todo.Description,
+          IsComplete = todo.IsComplete,
+          LastUpdate = todo.LastUpdate
+        }).ToList();
+
+      return Ok(todos);
     }
 
     [Authorize()]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Update([FromRoute]int id, [FromBody] TodoRequest request)
+    public async Task<IActionResult> Update([FromRoute]int id, [FromBody] TodoDto request)
     {
       var user = await GetUser();
       var todo = await _todoService.GetById(id);
@@ -103,16 +118,17 @@ namespace Todo.API.Controllers
       todo.Description = request.Description;
       todo.IsComplete = request.IsComplete;
       todo.LastUpdate = DateTime.UtcNow;
-      _todoService.Update(todo);
+
+      var result = await _todoService.Update(todo);
 
       return Ok();
     }
 
     [Authorize()]
-    [HttpPut("{id}/{field}")]
+    [HttpPut("{id}/IsComplete")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> ToggleIsComplete([FromRoute]int id, [FromRoute]string field, [FromBody]TodoUpdatePartialRequest request)
+    public async Task<IActionResult> ToggleIsComplete([FromRoute]int id, [FromBody]TodoUpdateDto request)
     {
       var user = await GetUser();
       var todo = await _todoService.GetById(id);
@@ -127,15 +143,16 @@ namespace Todo.API.Controllers
         return Forbid();
       }
 
-      todo.UpdateField(field, request.Value);
-      _todoService.Update(todo);
+      todo.UpdateField("IsComplete", request.Value);
+      
+      var result = await _todoService.Update(todo);
 
       return Ok();
     }
 
     [Authorize()]
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(TodoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TodoDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> Delete([FromRoute]int id)
     {
       var user = await GetUser();
@@ -153,7 +170,7 @@ namespace Todo.API.Controllers
 
       todo = await _todoService.Delete(id);
 
-      var response = new TodoResponse() 
+      var response = new TodoDto() 
       {
         Title = todo.Title,
         Description = todo.Description,

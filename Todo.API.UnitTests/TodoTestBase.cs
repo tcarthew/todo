@@ -15,20 +15,26 @@ namespace Todo.API.UnitTests
 {
   public class TodoTestBase: IDisposable
   {
-    private readonly string connectionString = "DataSource=memory:";
-    private readonly SqliteConnection _connection;
-    protected readonly TodoDbContext _context;
+    private readonly string connectionString = "Filename=:memory:";
+    private SqliteConnection _connection;
+    
     private IList<User> _mockUsers = new List<User>()
     {
-      new User() { Id = 1, Email = "test1@test.com" },
-      new User() { Id = 2, Email = "test2@test.com" }
+      new User() { Id = 1, Email = "test1@test.com", FirstName = "Test", LastName = "One" },
+      new User() { Id = 2, Email = "test2@test.com", FirstName = "Test", LastName = "Two" }
     };
 
     public TodoTestBase()
     {
+      
+    }
+
+    protected TodoDbContext CreateContext() 
+    {
       _connection = new SqliteConnection(connectionString);
       _connection.Open();
-      _context = new TodoDbContext(GetOptions(_connection));
+
+      return new TodoDbContext(GetOptions(_connection));
     }
 
     public void Dispose()
@@ -69,7 +75,7 @@ namespace Todo.API.UnitTests
     {
       var options = new Mock<IOptions<AppSettings>>();
 
-      options.Setup(o => o.Value).Returns(new AppSettings() {  Secret = "ABC" });
+      options.Setup(o => o.Value).Returns(new AppSettings() {  Secret = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" });
       
       return options;
     }

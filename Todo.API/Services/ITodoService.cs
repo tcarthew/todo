@@ -9,7 +9,7 @@ namespace Todo.API.Services
     Task<TodoItem> Create(string title, string description, User user);
     IList<TodoItem> GetAll(long userId);
     Task<TodoItem> GetById(int id);
-    void Update(TodoItem item);
+    Task<int> Update(TodoItem item);
     Task<TodoItem> Delete(int id);
   }  
 }

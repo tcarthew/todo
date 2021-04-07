@@ -7,7 +7,7 @@ namespace Todo.API.Services
 {
   public interface IUserService
   {
-    Task<User> CreateAsync(string email, string password, string role = Role.RoletypeUser);
+    Task<User> CreateAsync(User user, string password, string role = Role.RoletypeUser);
     IQueryable<User> GetUsers();
     Task<User> GetUserByEmailAsync(string email);
     Task<User> GetUserById(long userId);

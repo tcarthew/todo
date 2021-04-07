@@ -1,6 +1,6 @@
 namespace Todo.API.Models.Todo
 {
-  public class TodoUpdatePartialRequest
+  public class TodoUpdateDto
   {
     public object Value { get; set; }
   }

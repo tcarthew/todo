@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,68 +11,111 @@ using Todo.API.Services;
 
 namespace Todo.API.Controllers
 {
-  [ApiController]
-  [Route("api/auth")]
-  public class AuthenticationController : ControllerBase
-  {
-    private IUserService _userService;
-    public AuthenticationController(IUserService userService)
+    [ApiController]
+    [Route("api/auth")]
+    public class AuthenticationController : BaseController
     {
-      this._userService = userService;
-    }
-
-    [HttpPost]
-    [AllowAnonymous()]
-    [Route("register")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Produces("application/json")]
-    public async Task<IActionResult> Register([FromBody] UserRequest request)
-    {
-      if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
-      {
-        return UnprocessableEntity("Email & pasword are required");
-      }
-
-      try 
-      {
-        if (await _userService.GetUserByEmailAsync(request.Email) == null)
+        public AuthenticationController(IUserService userService)
+          : base(userService)
         {
-          var result = await _userService.CreateAsync(request.Email, request.Password);
-          
-          return CreatedAtRoute("User_GetById", new { id = result.Id }, null); 
         }
-        
-        return UnprocessableEntity("Email address is in user");
-      }
-      catch (Exception ex)
-      {
-        return StatusCode(500, $"Unknown error: {ex.Message}");
-      }
+
+        [HttpPost]
+        [AllowAnonymous()]
+        [Route("register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Produces("application/json")]
+        public async Task<IActionResult> Register([FromBody] UserDto request)
+        {
+            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+            {
+                return UnprocessableEntity("Email & pasword are required");
+            }
+
+            try
+            {
+                if (await _userService.GetUserByEmailAsync(request.Email) == null)
+                {
+                    var user = new User()
+                    {
+                        FirstName = request.FirstName,
+                        LastName = request.LastName,
+                        Email = request.Email,
+                        UserName = request.Email
+                    };
+                    var result = await _userService.CreateAsync(user, request.Password);
+
+                    return CreatedAtRoute("User_GetById", new { id = result.Id }, null);
+                }
+
+                return UnprocessableEntity("Email address is in use");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Unknown error: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(AuthenticateDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Authenticate([FromBody] UserDto request)
+        {
+            var user = await _userService.GetUserByEmailAsync(request.Email);
+
+            if (user == null)
+            {
+                user = new User() { Email = "dummy@dummy.com" };
+            }
+
+            if (await _userService.CheckPasswordAsync(user, request.Password))
+            {
+                var token = await _userService.CreateAuthorizationToken(user);
+                var response = new AuthenticateDto(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
+
+                return Ok(response);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("me")]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Me()
+        {
+            if (Token == null)
+            {
+                return Unauthorized();
+            }
+
+            var tokenIdClaim = Token.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
+
+            if (tokenIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userService.GetUserById(Convert.ToInt64(tokenIdClaim.Value));
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var userDto = new UserDto(user.Id, user.Email, user.UserName)
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+
+            return Ok(userDto);
+        }
     }
-
-    [HttpPost]
-    [AllowAnonymous]
-    [ProducesResponseType(typeof(AuthenticateResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Authenticate([FromBody]UserRequest request)
-    {
-      var user = await _userService.GetUserByEmailAsync(request.Email);
-      
-      if (user == null) {
-        user = new User() { Email = "dummy@dummy.com" };
-      }
-
-      if (await _userService.CheckPasswordAsync(user, request.Password))
-      {
-        var token = await _userService.CreateAuthorizationToken(user);
-        var response = new AuthenticateResponse(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
-
-        return Ok(response);
-      }
-
-      return BadRequest();
-    }
-  }
 }

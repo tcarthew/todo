@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \n    \"email\": \"admin@test.com\",\n    \"password\": \"test123\"\n}",
+					"raw": "{ \n    \"email\": \"test4@test.com\",\n    \"password\": \"test123\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -45,7 +45,7 @@
 						"exec": [
 							"let response = pm.response.json();",
 							"",
-							"pm.variables.set('auth-token', response.jwtToken);"
+							"pm.collectionVariables.set('auth-token', response.token);"
 						],
 						"type": "text/javascript"
 					}
@@ -55,12 +55,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [],
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test1@test.com\",\n    \"password\": \"test123\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
-						}
+						},
+						"urlencoded": {}
 					}
 				},
 				"url": {
@@ -90,7 +91,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:5000/api/users/1",
+					"raw": "http://localhost:5000/api/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -98,8 +99,7 @@
 					"port": "5000",
 					"path": [
 						"api",
-						"users",
-						"1"
+						"users"
 					]
 				},
 				"description": "Get user by id\n\nMust be admin\nCan only retrieve yourself, i.e., the logged in use"
@@ -119,7 +119,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Title\": \"Test\",\n    \"Description\": \"Test\",\n    \"IsComplete\": \"false\"\n}",
+					"raw": "{\n    \"Title\": \"Test B\",\n    \"Description\": \"Test B\",\n    \"IsComplete\": \"false\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -296,6 +296,18 @@
 		},
 		{
 			"name": "Get all users (Admin only)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d428ec42-7611-4ad9-bf54-fdd5d6473308",
+						"exec": [
+							"console.log(pm.variables.get('auth-token'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -345,7 +357,7 @@
 	],
 	"variable": [
 		{
-			"id": "6e5c0cd6-49a6-4d67-be0f-1af8c3264f1d",
+			"id": "ffb0176d-548a-4765-898d-fc7d71a14658",
 			"key": "auth-token",
 			"value": ""
 		}
